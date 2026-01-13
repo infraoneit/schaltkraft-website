@@ -17,7 +17,8 @@ export default async function ServicesPage() {
 
     const blocks = page?.blocks || [];
     const heroBlock = blocks.find((b: any) => b.discriminant === 'hero');
-    const otherBlocks = blocks.filter((b: any) => b.discriminant !== 'hero');
+    const introBlocks = blocks.filter((b: any) => b.discriminant === 'intro');
+    const valuesBlocks = blocks.filter((b: any) => b.discriminant === 'values');
 
     return (
         <main className="min-h-screen bg-black">
@@ -32,10 +33,15 @@ export default async function ServicesPage() {
                 </div>
             )}
 
-            {/* 2. Services Grid (Dynamic) */}
+            {/* 2. Intro Section - Trust/Competence intro BEFORE services */}
+            {introBlocks.length > 0 && (
+                <SectionRenderer blocks={introBlocks} />
+            )}
+
+            {/* 3. Services Grid (Dynamic) */}
             <section className="py-20 bg-zinc-950">
                 <PageContainer>
-                    <div className="grid md:grid-cols-2 gap-8 -mt-20 relative z-20">
+                    <div className="grid md:grid-cols-2 gap-8 relative z-20">
                         {services.map((service: any) => (
                             <Link
                                 key={service.slug}
@@ -68,8 +74,10 @@ export default async function ServicesPage() {
                 </PageContainer>
             </section>
 
-            {/* 3. Other Blocks (Competence, USPs, etc.) */}
-            <SectionRenderer blocks={otherBlocks} />
+            {/* 4. Values/USP Section AFTER services */}
+            {valuesBlocks.length > 0 && (
+                <SectionRenderer blocks={valuesBlocks} />
+            )}
         </main>
     );
 }

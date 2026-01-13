@@ -6,54 +6,64 @@ import { ArrowRight, Shield, Zap, Target, Flag, Users, Leaf, Award, Lightbulb } 
 interface IntroBlockProps {
     data: any;
     isNested?: boolean;
+    index?: number;
 }
 
-export function IntroBlock({ data, isNested }: IntroBlockProps) {
+export function IntroBlock({ data, isNested, index = 0 }: IntroBlockProps) {
     const text = data?.text || "";
     const links = data?.links || [];
+    // Support explicit imagePosition: 'left' or 'right', fallback to alternating
+    // Default: even indices (0, 2, 4...) have image LEFT, odd indices (1, 3, 5...) have image RIGHT
+    const imagePosition = data?.imagePosition?.toLowerCase();
+    const isReversed = imagePosition === 'right' ? true : imagePosition === 'left' ? false : index % 2 === 1;
+
+    const TextSection = (
+        <div className={`flex flex-col gap-8 ${isReversed ? 'order-2 lg:order-1' : 'order-2'}`}>
+            <IntroContent data={data} text={text} links={links} />
+        </div>
+    );
+
+    const ImageSectionWithOrder = (
+        <div className={`relative aspect-[4/3] rounded-[2rem] overflow-hidden group bg-zinc-900 border border-white/10 ${isReversed ? 'order-1 lg:order-2' : 'order-1'}`}>
+            {data.image ? (
+                <>
+                    <div className="absolute inset-0 border-2 border-white/10 z-10 rounded-[2rem] group-hover:border-brand-orange/50 transition-colors duration-500" />
+                    <img
+                        src={data.image}
+                        alt={data.headline || "Intro"}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 saturate-0 group-hover:saturate-100"
+                    />
+                </>
+            ) : (data.icons && data.icons.length > 0) ? (
+                <div className="w-full h-full p-8 grid grid-cols-2 gap-4 items-center justify-center">
+                    {data.icons.map((iconStr: string, i: number) => {
+                        const iconKey = iconStr.toLowerCase();
+                        let Icon = Shield;
+                        if (iconKey === 'zap') Icon = Zap;
+                        if (iconKey === 'target') Icon = Target;
+                        if (iconKey === 'users') Icon = Users;
+                        if (iconKey === 'flag') Icon = Flag;
+
+                        return (
+                            <div key={i} className="flex flex-col items-center justify-center gap-2 text-brand-orange">
+                                <div className="w-16 h-16 rounded-full bg-zinc-800 border-2 border-brand-orange/20 flex items-center justify-center mb-1">
+                                    <Icon className="w-8 h-8" />
+                                </div>
+                                <span className="text-xs uppercase tracking-widest text-white/50">{iconStr}</span>
+                            </div>
+                        )
+                    })}
+                </div>
+            ) : null}
+        </div>
+    );
 
     const Content = (
         <>
             {(data.image || (data.icons && data.icons.length > 0)) ? (
                 <div className={`grid ${isNested ? 'gap-8' : 'lg:grid-cols-2 gap-12 lg:gap-24'} items-center`}>
-                    {/* Image Left */}
-                    <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden group bg-zinc-900 border border-white/10">
-                        {data.image ? (
-                            <>
-                                <div className="absolute inset-0 border-2 border-white/10 z-10 rounded-[2rem] group-hover:border-brand-orange/50 transition-colors duration-500" />
-                                <img
-                                    src={data.image}
-                                    alt={data.headline || "Intro"}
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 saturate-0 group-hover:saturate-100"
-                                />
-                            </>
-                        ) : (data.icons && data.icons.length > 0) ? (
-                            <div className="w-full h-full p-8 grid grid-cols-2 gap-4 items-center justify-center">
-                                {data.icons.map((iconStr: string, i: number) => {
-                                    const iconKey = iconStr.toLowerCase();
-                                    let Icon = Shield;
-                                    if (iconKey === 'zap') Icon = Zap;
-                                    if (iconKey === 'target') Icon = Target;
-                                    if (iconKey === 'users') Icon = Users;
-                                    if (iconKey === 'flag') Icon = Flag;
-
-                                    return (
-                                        <div key={i} className="flex flex-col items-center justify-center gap-2 text-brand-orange">
-                                            <div className="w-16 h-16 rounded-full bg-zinc-800 border-2 border-brand-orange/20 flex items-center justify-center mb-1">
-                                                <Icon className="w-8 h-8" />
-                                            </div>
-                                            <span className="text-xs uppercase tracking-widest text-white/50">{iconStr}</span>
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        ) : null}
-                    </div>
-
-                    {/* Text Right */}
-                    <div className="flex flex-col gap-8">
-                        <IntroContent data={data} text={text} links={links} />
-                    </div>
+                    {ImageSectionWithOrder}
+                    {TextSection}
                 </div>
             ) : (
                 <div className={isNested ? "flex flex-col gap-8" : "max-w-4xl mx-auto flex flex-col gap-8"}>

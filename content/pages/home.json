@@ -121,11 +121,27 @@
     {
       "discriminant": "partnerSlider",
       "value": {
-        "title": "Unsere Partner & Mitgliedschaften",
+        "title": "Unsere Partner",
         "logos": [
           {
             "name": "Sonepar",
-            "logo": "/images/sonepar.jpg"
+            "logo": "/images/partners/sonepar-logo.jpg"
+          },
+          {
+            "name": "WAGO",
+            "logo": "/images/partners/wago-logo.png"
+          },
+          {
+            "name": "Hager",
+            "logo": "/images/partners/hager-logo.png"
+          },
+          {
+            "name": "Finder",
+            "logo": "/images/partners/finder-logo.png"
+          },
+          {
+            "name": "ASS",
+            "logo": "/images/partners/ass-logo.png"
           }
         ]
       }

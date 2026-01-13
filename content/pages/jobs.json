@@ -25,18 +25,23 @@
                 "items": [
                     {
                         "title": "Weiterbildung",
-                        "description": "Wir fördern Ihre fachliche Entwicklung mit gezielten Schulungen und Weiterbildungen.",
-                        "icon": "book"
+                        "description": "Wir investieren in Ihre Zukunft: Gezielte Schulungen, Zertifizierungen und Karriereentwicklung sind bei uns selbstverständlich.",
+                        "icon": "graduationcap"
                     },
                     {
                         "title": "Modernes Werkzeug",
-                        "description": "Arbeiten Sie mit top-modernem Equipment und Fahrzeugen.",
-                        "icon": "tool"
+                        "description": "Arbeiten Sie mit topmoderner Ausrüstung, hochwertigen Werkzeugen und bestens ausgestatteten Firmenfahrzeugen.",
+                        "icon": "wrench"
                     },
                     {
                         "title": "Teamspirit",
-                        "description": "Ein kollegiales Umfeld und regelmässige Teamevents sind uns wichtig.",
-                        "icon": "users"
+                        "description": "Ein kollegiales Umfeld mit flachen Hierarchien, regelmässige Teamevents und ein Chef, der zuhört.",
+                        "icon": "heart"
+                    },
+                    {
+                        "title": "Sichere Zukunft",
+                        "description": "Zukunftssichere Branche, faire Löhne, 5 Wochen Ferien und attraktive Sozialleistungen für Ihre Sicherheit.",
+                        "icon": "shield"
                     }
                 ]
             }

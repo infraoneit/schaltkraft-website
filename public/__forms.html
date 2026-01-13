@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <body>
-    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+    <!-- Static form definition for Netlify Forms -->
+    <form name="contact" netlify netlify-honeypot="bot-field" action="/contact?success=true" method="POST" hidden>
         <input type="hidden" name="form-name" value="contact" />
         <input name="bot-field" />
         <input name="name" />
+        <input name="company" />
         <input name="email" />
+        <input name="phone" />
+        <select name="subject">
+            <option>Offertanfrage</option>
+            <option>Technischer Support</option>
+            <option>Projektanfrage</option>
+            <option>Service & Wartung</option>
+            <option>Bewerbung</option>
+            <option>Allgemeine Anfrage</option>
+        </select>
         <textarea name="message"></textarea>
+        <input type="checkbox" name="privacy" />
     </form>
 </body>
+
 </html>

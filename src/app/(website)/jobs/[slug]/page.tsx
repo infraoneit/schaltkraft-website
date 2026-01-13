@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { PageContainer } from '@/components/layout/PageContainer';
 import Link from 'next/link';
+import { JobContent } from '@/components/jobs/JobContent';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
@@ -36,28 +37,52 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
         return notFound();
     }
 
-    // JSON-LD Structured Data
+    // JSON-LD Structured Data for Google Jobs
+    const jobDescription = job.description?.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() || '';
+    const validThrough = new Date(new Date(job.datePosted).setMonth(new Date(job.datePosted).getMonth() + 3)).toISOString().split('T')[0];
+
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'JobPosting',
         title: job.title,
-        description: job.description, // Requires HTML cleanup usually, but raw html is okay-ish for simple check
+        description: jobDescription,
         datePosted: job.datePosted,
+        validThrough: validThrough,
         employmentType: job.employmentType === 'Vollzeit' ? 'FULL_TIME' : 'PART_TIME',
+        directApply: true,
         hiringOrganization: {
             '@type': 'Organization',
             name: 'Schaltkraft AG',
             sameAs: 'https://schaltkraft.ch',
-            logo: 'https://schaltkraft.ch/images/global/logo.svg'
+            logo: 'https://schaltkraft.ch/images/global/logo.svg',
+            url: 'https://schaltkraft.ch'
         },
         jobLocation: {
             '@type': 'Place',
             address: {
                 '@type': 'PostalAddress',
+                streetAddress: 'Mühlegartenstrasse 5',
                 addressLocality: job.location,
+                postalCode: '8590',
+                addressRegion: 'Thurgau',
                 addressCountry: 'CH'
             }
-        }
+        },
+        baseSalary: {
+            '@type': 'MonetaryAmount',
+            currency: 'CHF',
+            value: {
+                '@type': 'QuantitativeValue',
+                minValue: 60000,
+                maxValue: 85000,
+                unitText: 'YEAR'
+            }
+        },
+        applicantLocationRequirements: {
+            '@type': 'Country',
+            name: 'Schweiz'
+        },
+        jobLocationType: 'ONSITE'
     };
 
     return (
@@ -100,7 +125,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
                         </h1>
 
                         <a
-                            href="mailto:jobs@schaltkraft.ch"
+                            href="mailto:info@schaltkraft.ch"
                             className="inline-flex items-center justify-center px-8 py-4 bg-brand-orange text-white font-bold rounded-full hover:bg-white hover:text-brand-orange transition-all duration-300 transform hover:scale-105"
                         >
                             Jetzt bewerben
@@ -111,35 +136,40 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
                 {/* Content */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     <div className="lg:col-span-8">
-                        <div
-                            className="prose prose-invert prose-lg max-w-none prose-headings:font-heading prose-headings:font-bold prose-p:text-zinc-300 prose-li:text-zinc-300 prose-strong:text-white prose-a:text-brand-orange"
-                            dangerouslySetInnerHTML={{ __html: job.description }}
-                        />
-
-                        <div className="mt-16 pt-16 border-t border-white/10">
-                            <h3 className="text-2xl font-bold mb-6">Interessiert?</h3>
-                            <p className="text-xl text-zinc-400 mb-8">
-                                Wir freuen uns auf deine Bewerbung (CV genügt) per E-Mail.
-                            </p>
-                            <a
-                                href="mailto:jobs@schaltkraft.ch"
-                                className="inline-flex items-center justify-center px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-brand-orange hover:text-white transition-all duration-300"
-                            >
-                                Jetzt bewerben
-                            </a>
-                        </div>
+                        {/* Custom styled job content with icons */}
+                        <JobContent description={job.description} />
                     </div>
 
-                    <div className="lg:col-span-4 space-y-8">
-                        {/* Sidebar Widget: About Company or Contact */}
-                        <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10 sticky top-32">
-                            <h3 className="text-xl font-bold mb-4">Über Schaltkraft</h3>
-                            <p className="text-zinc-400 mb-6 text-sm">
-                                Wir sind Spezialisten im Schaltanlagenbau und realisieren anspruchsvolle Projekte mit höchster Präzision.
-                            </p>
-                            <Link href="/about-us" className="text-brand-orange hover:text-white text-sm font-semibold">
-                                Mehr über uns &rarr;
-                            </Link>
+                    <div className="lg:col-span-4">
+                        {/* Sticky Sidebar with CTA and Company Info */}
+                        <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10 sticky top-32 space-y-8">
+                            {/* CTA Section */}
+                            <div>
+                                <h3 className="text-2xl font-bold mb-4 text-brand-orange">Interessiert?</h3>
+                                <p className="text-zinc-400 mb-6 text-sm">
+                                    Wir freuen uns auf Ihre vollständigen Bewerbungsunterlagen per E-Mail.
+                                </p>
+                                <a
+                                    href="mailto:info@schaltkraft.ch"
+                                    className="w-full inline-flex items-center justify-center px-6 py-4 bg-brand-orange text-white font-bold rounded-full hover:bg-white hover:text-brand-orange transition-all duration-300 transform hover:scale-105"
+                                >
+                                    Jetzt bewerben
+                                </a>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="border-t border-white/10"></div>
+
+                            {/* Company Info */}
+                            <div>
+                                <h3 className="text-lg font-bold mb-3">Über Schaltkraft</h3>
+                                <p className="text-zinc-400 mb-4 text-sm">
+                                    Wir sind Spezialisten im Schaltanlagenbau und realisieren anspruchsvolle Projekte mit höchster Präzision.
+                                </p>
+                                <Link href="/about-us" className="text-brand-orange hover:text-white text-sm font-semibold transition-colors">
+                                    Mehr über uns &rarr;
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>

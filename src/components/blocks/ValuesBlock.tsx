@@ -1,5 +1,5 @@
 import { PageContainer } from '@/components/layout/PageContainer';
-import { Award, Lightbulb, Users, Leaf, Shield, Zap, Target, Flag } from 'lucide-react';
+import { Award, Lightbulb, Users, Leaf, Shield, Zap, Target, Flag, GraduationCap, Wrench, Heart } from 'lucide-react';
 
 interface ValuesBlockProps {
     data: any;
@@ -20,7 +20,10 @@ export function ValuesBlock({ data }: ValuesBlockProps) {
         leaf: Leaf,
         trophy: Award,
         target: Target,
-        flag: Flag
+        flag: Flag,
+        graduationcap: GraduationCap,
+        wrench: Wrench,
+        heart: Heart
     };
 
     return (

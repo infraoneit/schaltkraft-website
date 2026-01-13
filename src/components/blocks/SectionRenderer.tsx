@@ -25,6 +25,9 @@ interface SectionRendererProps {
 export function SectionRenderer({ blocks, isNested = false }: SectionRendererProps) {
     if (!blocks || !Array.isArray(blocks)) return null;
 
+    // Track intro block index separately for correct image alternating
+    let introBlockIndex = 0;
+
     return (
         <div className="flex flex-col">
             {blocks.map((block, index) => {
@@ -33,7 +36,9 @@ export function SectionRenderer({ blocks, isNested = false }: SectionRendererPro
                     console.warn(`No component found for block type: ${block.discriminant}`);
                     return null;
                 }
-                return <Component key={index} data={block.value} isNested={isNested} />;
+                // Pass the intro-specific index for intro blocks
+                const blockIndex = block.discriminant === 'intro' ? introBlockIndex++ : index;
+                return <Component key={index} data={block.value} isNested={isNested} index={blockIndex} />;
             })}
         </div>
     );

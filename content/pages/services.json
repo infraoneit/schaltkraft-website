@@ -21,34 +21,11 @@
             }
         },
         {
-            "discriminant": "richText",
+            "discriminant": "intro",
             "value": {
-                "content": {
-                    "type": "doc",
-                    "content": [
-                        {
-                            "type": "heading",
-                            "attrs": {
-                                "level": 2
-                            },
-                            "content": [
-                                {
-                                    "type": "text",
-                                    "text": "Unsere Kompetenzen im Überblick"
-                                }
-                            ]
-                        },
-                        {
-                            "type": "paragraph",
-                            "content": [
-                                {
-                                    "type": "text",
-                                    "text": "Als führender Anbieter für Schaltanlagen bieten wir Ihnen ein breites Spektrum an technischer Expertise und Branchen-Know-how."
-                                }
-                            ]
-                        }
-                    ]
-                }
+                "headline": "Unsere Kompetenzen",
+                "subheadline": "Ihr Partner für Schaltanlagen",
+                "text": "Als führender Anbieter für Schaltanlagen bieten wir Ihnen ein breites Spektrum an technischer Expertise und Branchen-Know-how. Von der ersten Beratung bis zur finalen Inbetriebnahme stehen wir Ihnen als kompetenter Partner zur Seite."
             }
         },
         {
@@ -58,7 +35,7 @@
                     {
                         "title": "Schweizer Qualität",
                         "description": "Präzision und Zuverlässigkeit in jeder Anlage.",
-                        "icon": "check"
+                        "icon": "flag"
                     },
                     {
                         "title": "Normgerecht",
