@@ -320,18 +320,6 @@ export default config({
                     table: true,
                     link: true,
                   },
-                  config: {
-                    tags: {
-                      icon: {
-                        render: 'icon',
-                        attributes: {
-                          name: { type: String },
-                          size: { type: Number, default: 24 },
-                          className: { type: String, default: 'text-brand-orange' },
-                        },
-                      },
-                    },
-                  },
                 })
               })
             }
