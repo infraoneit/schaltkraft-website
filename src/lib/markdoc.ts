@@ -1,5 +1,39 @@
 import Markdoc, { Config, nodes, Tag } from '@markdoc/markdoc';
 
+// Custom node definitions for Keystatic/Prosemirror compatibility
+// Using 'as any' for nodes that Keystatic uses but aren't in Markdoc's strict NodeType
+const customNodes = {
+    // Horizontal rule (Keystatic uses 'horizontal_rule')
+    horizontal_rule: {
+        render: 'hr',
+        transform() {
+            return new Tag('hr', { class: 'border-zinc-700 my-8' });
+        }
+    },
+    // Hard break (Keystatic uses 'hard_break')
+    hard_break: {
+        render: 'br'
+    },
+    // Bullet list (Keystatic uses 'bullet_list')
+    bullet_list: {
+        transform(node: any, config: any) {
+            return new Tag('ul', {
+                class: 'list-disc list-outside pl-8 my-6 text-zinc-300 space-y-2',
+                style: 'list-style-type: disc; padding-left: 2rem;'
+            }, node.transformChildren(config));
+        }
+    },
+    // List item (Keystatic uses 'list_item')
+    list_item: {
+        transform(node: any, config: any) {
+            return new Tag('li', {
+                class: 'pl-2 marker:text-brand-orange',
+                style: 'display: list-item;'
+            }, node.transformChildren(config));
+        }
+    },
+};
+
 export const markdocConfig: Config = {
     nodes: {
         paragraph: { render: 'p' },
@@ -17,35 +51,18 @@ export const markdocConfig: Config = {
                 level: { type: Number }
             }
         },
-        // Horizontal rule
-        horizontal_rule: {
+        // Standard Markdoc hr
+        hr: {
             render: 'hr',
             transform() {
                 return new Tag('hr', { class: 'border-zinc-700 my-8' });
             }
         },
-        // Hard break (line break within paragraph)
-        hard_break: {
+        // Standard Markdoc hardbreak
+        hardbreak: {
             render: 'br'
         },
-        // Support Prosemirror/Keystatic node names
-        bullet_list: {
-            transform(node, config) {
-                return new Tag('ul', {
-                    class: 'list-disc list-outside pl-8 my-6 text-zinc-300 space-y-2',
-                    style: 'list-style-type: disc; padding-left: 2rem;'
-                }, node.transformChildren(config));
-            }
-        },
-        list_item: {
-            transform(node, config) {
-                return new Tag('li', {
-                    class: 'pl-2 marker:text-brand-orange',
-                    style: 'display: list-item;'
-                }, node.transformChildren(config));
-            }
-        },
-        // Standard Markdoc node names (fallback)
+        // Standard Markdoc list
         list: {
             transform(node, config) {
                 const tag = node.attributes['ordered'] ? 'ol' : 'ul';
@@ -55,6 +72,7 @@ export const markdocConfig: Config = {
                 }, node.transformChildren(config));
             }
         },
+        // Standard Markdoc item
         item: {
             transform(node, config) {
                 return new Tag('li', {
@@ -138,6 +156,8 @@ export const markdocConfig: Config = {
                 return new Tag('td', { class: 'p-4 text-zinc-300' }, node.transformChildren(config));
             }
         },
+        // Merge custom nodes for Keystatic compatibility
+        ...customNodes as any,
     },
     tags: {},
 };
